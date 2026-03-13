@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+__pycache__/
+*.pyc
+venv/
+backend/data/rockyou.txt
+*.log
+.DS_Store
