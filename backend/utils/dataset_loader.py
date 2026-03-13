@@ -36,6 +36,11 @@ def load_dataset(use_full=False):
     print(f"Dropping existing '{COLLECTION_NAME}' collection...")
     collection.drop()
 
+    # Create indexes before inserting so insert_many(ordered=False) skips dupes
+    print("Creating indexes...")
+    collection.create_index("password", unique=True)
+    collection.create_index("line_number")
+
     print(f"Loading passwords from: {file_path}")
     start = time.time()
 
@@ -81,11 +86,6 @@ def load_dataset(use_full=False):
         except Exception as e:
             if hasattr(e, "details"):
                 inserted += e.details.get("nInserted", 0)
-
-    # Create indexes
-    print("Creating indexes...")
-    collection.create_index("password", unique=True)
-    collection.create_index("line_number")
 
     elapsed = time.time() - start
     final_count = collection.count_documents({})
